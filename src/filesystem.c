@@ -1,6 +1,8 @@
 #include "filesystem.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 
 #if defined(__linux__)
@@ -10,13 +12,21 @@ unsigned int generate_file_database (char *root_directory, char **file_names)
     struct dirent *directory_info;
     struct stat file_info;
 
-    // Attemp to open directory for indexing
+    // Attempt to open directory for indexing
     if ((dir_ptr = opendir (root_directory)) != NULL)
     {
         while ((directory_info = readdir (dir_ptr)) != NULL)
         {
+            // Ignore . and .. directories
+            if ((abs (strcmp (directory_info->d_name, "."))) ||
+                (abs (strcmp (directory_info->d_name, ".."))))
+                continue;
+
 
         }
+
+        // Stop a memory leak
+        closedir (dir_ptr);
     }
     else
     {
@@ -29,10 +39,6 @@ unsigned int generate_file_database (char *root_directory, char **file_names)
         while ((dir_entity = readdir (dir_ptr)) != NULL)
         {
             full_path = input_dir + '/' + dir_entity->d_name;
-
-            // Ignore the "." and ".." directories
-            if ((full_path == input_dir + "/.") || (full_path == input_dir + "/.."))
-                continue;
             
             if (stat (full_path.c_str(), &f_info) == 0)
             {
@@ -48,13 +54,6 @@ unsigned int generate_file_database (char *root_directory, char **file_names)
                 }
             }
         }
-
-        // Indexing operation complete
-        closedir (dir_ptr);
-    }
-    else
-    {
-        print_error ("Something went wrong trying to open " + input_dir + " as a directory!");
     }
 
     return dir_index.size();
