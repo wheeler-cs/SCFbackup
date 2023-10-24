@@ -4,7 +4,14 @@ INC_DIR=inc
 SRC_DIR=src
 BUILD_DIR=build
 
-all: $(BUILD_DIR)/server.o
+# TODO: Fix this so it's not a $(NIGHTMARE)
+all: server
+
+server: $(BUILD_DIR)/server.o $(BUILD_DIR)/server_main.o
+	$(CC) $^ -o $(BUILD_DIR)/$@
+
+$(BUILD_DIR)/server_main.o: $(SRC_DIR)/server_main.c $(INC_DIR)/server.h
+	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
 
 $(BUILD_DIR)/server.o: $(SRC_DIR)/server.c $(INC_DIR)/server.h
 	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
@@ -17,3 +24,7 @@ init:
 .PHONY: clean
 clean:
 	rm -rf $(BUILD_DIR)/*
+
+.PHONY: run-server
+run-server:
+	./$(BUILD_DIR)/server
