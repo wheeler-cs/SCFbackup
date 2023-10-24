@@ -7,10 +7,13 @@ BUILD_DIR=build
 # TODO: Fix this so it's not a $(NIGHTMARE)
 all: server
 
-server: $(BUILD_DIR)/server.o $(BUILD_DIR)/server_main.o
+server: $(BUILD_DIR)/server.o $(BUILD_DIR)/filesystem.o $(BUILD_DIR)/server_main.o
 	$(CC) $^ -o $(BUILD_DIR)/$@
 
 $(BUILD_DIR)/server_main.o: $(SRC_DIR)/server_main.c $(INC_DIR)/server.h
+	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
+
+$(BUILD_DIR)/filesystem.o: $(SRC_DIR)/filesystem.c $(INC_DIR)/filesystem.h
 	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
 
 $(BUILD_DIR)/server.o: $(SRC_DIR)/server.c $(INC_DIR)/server.h
