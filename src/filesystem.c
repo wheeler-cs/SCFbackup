@@ -1,5 +1,7 @@
 #include "filesystem.h"
 
+#include <stdio.h>
+
 
 #if defined(__linux__)
 unsigned int generate_file_database (char *root_directory, char **file_names)
@@ -59,4 +61,9 @@ unsigned int generate_file_database (char *root_directory, char **file_names)
 }
 */
 #elif defined (__WIN32)
+unsigned int generate_file_database (char *root_directory, char **file_names)
+{
 
+}
+
+#endif
