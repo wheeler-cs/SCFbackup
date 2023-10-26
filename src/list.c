@@ -125,3 +125,21 @@ struct string_list_member *pop_back_string_list (struct string_list *list)
 
     return popped_member;
 }
+
+int is_string_list_empty (struct string_list *list)
+{
+    if ((list->head == NULL) && (list->tail == NULL))
+        return 1;
+    else
+        return 0;
+}
+
+int is_string_list_malformed (struct string_list *list)
+{
+    // Head and tail both either need to point to NULL or to some non-NULL address, not a mix
+    if (((list->head == NULL) && (list->tail != NULL)) ||
+        (list->head != NULL) && (list->tail == NULL))
+        return 1;
+    else
+        return 0;
+}

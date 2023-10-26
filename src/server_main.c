@@ -15,7 +15,7 @@ int main (int argc, char **argv)
     printf ("\nHead: %s", str_list->head->c_string);
     printf ("\nTail: %s", str_list->tail->c_string);
     list_mem_2 = pop_back_string_list (str_list);
-    if ((str_list->head == NULL) && (str_list->tail == NULL))
+    if (is_string_list_empty (str_list))
         printf ("\nList is empty");
     printf ("\nValue: %s", list_mem_2->c_string);
     printf ("\n");
