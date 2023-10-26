@@ -15,6 +15,17 @@ struct string_list *create_string_list ()
     return new_list;
 }
 
+void delete_string_list (struct string_list *list)
+{
+    struct string_list_member *traverser;
+
+    // Linearly iterate through list and pop off the head until the list is empty
+    while ((traverser = pop_front_string_list (list)) != NULL)
+    {
+        delete_string_list_member (traverser);
+    }
+}
+
 struct string_list_member *create_string_list_member (char *input_string)
 {
     // Allocate memory for list member and string data
@@ -26,6 +37,13 @@ struct string_list_member *create_string_list_member (char *input_string)
     new_member->next = new_member->previous = NULL;
 
     return new_member;
+}
+
+void delete_string_list_member (struct string_list_member *member)
+{
+    // Reclaim memory allocated for the member instance
+    if (member != NULL)
+        free (member);
 }
 
 void push_front_string_list (struct string_list *list, struct string_list_member *member)
@@ -138,7 +156,7 @@ int is_string_list_malformed (struct string_list *list)
 {
     // Head and tail both either need to point to NULL or to some non-NULL address, not a mix
     if (((list->head == NULL) && (list->tail != NULL)) ||
-        (list->head != NULL) && (list->tail == NULL))
+        ((list->head != NULL) && (list->tail == NULL)))
         return 1;
     else
         return 0;
