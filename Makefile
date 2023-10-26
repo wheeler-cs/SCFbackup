@@ -12,7 +12,7 @@ all: server
 server: $(BLD_DIR)/filesystem.o $(BLD_DIR)/list.o $(BLD_DIR)/server.o $(BLD_DIR)/server_main.o
 	$(CC) $^ -o $(BLD_DIR)/$@
 
-$(BLD_DIR)/server_main.o: $(SRC_DIR)/server_main.c $(INC_DIR)/server.h
+$(BLD_DIR)/server_main.o: $(SRC_DIR)/server_main.c $(INC_DIR)/filesystem.h $(INC_DIR)/list.h $(INC_DIR)/server.h
 	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
 
 
