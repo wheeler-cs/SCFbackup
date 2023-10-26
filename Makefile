@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -c -pedantic
+CFLAGS=-Wall -c -g -pedantic
 INC_DIR=inc
 SRC_DIR=src
 BUILD_DIR=build
