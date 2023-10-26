@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct string_list * create_string_list ()
+struct string_list *create_string_list ()
 {
     // Allocate memory for new list
     struct string_list *new_list = malloc (sizeof (struct string_list_member));
@@ -15,7 +15,7 @@ struct string_list * create_string_list ()
     return new_list;
 }
 
-struct string_list_member * create_string_list_member (char *input_string)
+struct string_list_member *create_string_list_member (char *input_string)
 {
     // Allocate memory for list member and string data
     struct string_list_member *new_member = malloc (sizeof (struct string_list_member));
@@ -42,6 +42,8 @@ void push_front_string_list (struct string_list *list, struct string_list_member
     {
         list->head = list->tail = member;
     }
+
+    ++(list->size);
 }
 
 void push_back_string_list (struct string_list *list, struct string_list_member *member)
@@ -58,4 +60,68 @@ void push_back_string_list (struct string_list *list, struct string_list_member 
     {
         list->head = list->tail = member;
     }
+
+    ++(list->size);
+}
+
+struct string_list_member *pop_front_string_list (struct string_list *list)
+{
+    struct string_list_member *popped_member;
+
+    // List still has elements in it, pop front
+    if (list->head != NULL)
+    {
+        popped_member = list->head;
+
+        // Popping will result in an empty list
+        if (list->head->next == NULL)
+            list->head = list->tail = NULL;
+        // List will still have elements after operation
+        else
+        {
+            list->head = list->head->next;
+            list->head->previous = NULL;
+        }
+
+        // Sever member's connection to other elements, regardless of the list's status
+        popped_member->next = popped_member->previous = NULL;
+
+        --(list->size);
+    }
+    // List is empty, return NULL
+    else
+        return NULL;
+
+    return popped_member;
+}
+
+struct string_list_member *pop_back_string_list (struct string_list *list)
+{
+    struct string_list_member *popped_member;
+
+    // List still has elements in it, pop back
+    if (list->tail != NULL)
+    {
+        popped_member = list->tail;
+
+        // Popping will result in an empty list
+        if (list->tail->previous == NULL)
+            list->head = list->tail = NULL;
+        // List will still have elements after operation
+        else
+        {
+            list->tail = list->tail->previous;
+            list->tail->next = NULL;
+        }
+
+        // Sever member's connection to other elements, regardless of the list's status
+        popped_member->next = popped_member->previous = NULL;
+
+        --(list->size);
+    }
+    // List is empty, return NULL
+    else
+        return NULL;
+
+    return popped_member;
 }

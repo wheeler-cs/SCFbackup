@@ -6,6 +6,7 @@
 #include <string.h>
 
 
+// === Begin Linux Code ================================================================================================
 #if defined(__linux__)
 void generate_file_database (char *root_directory, char **file_names, unsigned int *list_size)
 {
@@ -80,32 +81,8 @@ void generate_file_database (char *root_directory, char **file_names, unsigned i
         fprintf (stderr, "Cannot open directory");
     }
 }
-/*
 
-        std::string full_path = "";
-        while ((dir_entity = readdir (dir_ptr)) != NULL)
-        {
-            full_path = input_dir + '/' + dir_entity->d_name;
-            
-            if (stat (full_path.c_str(), &f_info) == 0)
-            {
-                // Recurse using gen_dir_index again if path refers to directory
-                if (f_info.st_mode & S_IFDIR)
-                {
-                    gen_dir_index (full_path, dir_index);
-                }
-                // Add path to list if refers to file
-                else if (f_info.st_mode & S_IFREG)
-                {
-                    dir_index.push_back (File(full_path));
-                }
-            }
-        }
-    }
-
-    return dir_index.size();
-}
-*/
+// === Begin Windows Code ==============================================================================================
 #elif defined (__WIN32)
 unsigned int generate_file_database (char *root_directory, char **file_names)
 {
