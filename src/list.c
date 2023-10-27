@@ -88,11 +88,23 @@ struct string_list_member *create_string_list_member (char *input_string)
 void delete_string_list_member (struct string_list_member *member)
 {
     // Clean up memory allocated for member and its string
-    // FIX: Memory leak was caused her originally because c_string data wasn't being freed w/ string_list_member.
+    // FIX: Memory leak was caused here originally because c_string data wasn't being freed w/ string_list_member.
     free (member->c_string);
     free (member);
 }
 
+/**
+ * @brief Adds a string_list_member to the front of a string_list instance.
+ * 
+ * @param list Destination string_list instance for the string_list_member.
+ * @param member The string_list_member to be inserted at the front of the list.
+ * 
+ * @pre Both parameters have been properly allocated and initialized.
+ * @post The member parameter is the new head of the list parameter.
+ * 
+ * @note If the list instance is empty, head and tail are both set to point to the member paramter.
+ * 
+*/
 void push_front_string_list (struct string_list *list, struct string_list_member *member)
 {
     // List isn't empty, stitch new element in
@@ -111,6 +123,18 @@ void push_front_string_list (struct string_list *list, struct string_list_member
     ++(list->size);
 }
 
+/**
+ * @brief Adds a string_list_member to the back of a string_list instance.
+ * 
+ * @param list Destination string_list instance for the string_list_member.
+ * @param member The string_list_member_to be inserted at the rear of the list.
+ * 
+ * @pre Both parameters have been properly allocated and initialized.
+ * @post The member parameter is the new tail of the list paramter.
+ * 
+ * @note If the list instance is empty, head and tail are both set to point to the member paramter.
+ * 
+*/
 void push_back_string_list (struct string_list *list, struct string_list_member *member)
 {
     // List isn't empty, stitch in new element
@@ -129,6 +153,21 @@ void push_back_string_list (struct string_list *list, struct string_list_member 
     ++(list->size);
 }
 
+/**
+ * @brief Removes the head string_list_member from a string_list instance.
+ * 
+ * @param list Source list from which the head element will be popped off.
+ * 
+ * @returns The string_list_member that was popped from the front of the parameter list.
+ * @retval NULL indicates that the list was empty and no member could be popped from the front.
+ * 
+ * @post If the list parameter was not empty, the head element is popped and the next element in the sequence is set to
+ *       be the new head.
+ * 
+ * @note If the element being popped from the list is the last one, both the head and tail pointers of the string_list
+ *       are set to NULL.
+ * 
+*/
 struct string_list_member *pop_front_string_list (struct string_list *list)
 {
     struct string_list_member *popped_member;
@@ -160,6 +199,21 @@ struct string_list_member *pop_front_string_list (struct string_list *list)
     return popped_member;
 }
 
+/**
+ * @brief Removes the tail string_list_member from a string_list instance.
+ * 
+ * @param list Source list from which the tail will be popped off.
+ * 
+ * @returns The stirng_list_member that was popped from the back of the parameter list.
+ * @retval NULL indicates that the list was empty and no member could be popped from the rear.
+ * 
+ * @post If the list parameter was not empty, the tail element is popped and the previous element in the sequence is set
+ *       to be the new tail
+ *
+ * @note If the element being popped from the list is the last one, both the head and tail pointers of the string_list
+ *       are set to NULL.
+ * 
+*/
 struct string_list_member *pop_back_string_list (struct string_list *list)
 {
     struct string_list_member *popped_member;
@@ -191,6 +245,18 @@ struct string_list_member *pop_back_string_list (struct string_list *list)
     return popped_member;
 }
 
+/**
+ * @brief Returns if the string_list is empty or not.
+ * 
+ * @param list The list to be evaluated for if it has member elements.
+ * 
+ * @returns The state of the list being empty or not empty.
+ * @retval 0 indicates the list is not empty.
+ * @retval 1 indicates the list is empty.
+ * 
+ * @note A list will be indicated as empty if the pointer itself is NULL or both the head and tail pointers are NULL.
+ * 
+*/
 int is_string_list_empty (struct string_list *list)
 {
     if (list == NULL)
@@ -201,11 +267,20 @@ int is_string_list_empty (struct string_list *list)
         return 0;
 }
 
+/**
+ * @brief Returns if the string_list is in a valid state.
+ * 
+ * @param list The list to be checked for if it is in a valid state.
+ * 
+ * @returns The state of the list's validity.
+ * @retval 0 indicates list is well-formed and can continue to be used.
+ * @retval 1 indicates the head and tail pointers are mismatched such that one is NULL and the other is not.
+ * 
+*/
 int is_string_list_malformed (struct string_list *list)
 {
     // Head and tail both either need to point to NULL or to some non-NULL address, not a mix
-    if (((list->head == NULL) && (list->tail != NULL)) ||
-        ((list->head != NULL) && (list->tail == NULL)))
+    if (((list->head == NULL) && (list->tail != NULL)) || ((list->head != NULL) && (list->tail == NULL)))
         return 1;
     else
         return 0;
