@@ -1,5 +1,6 @@
 #include "list.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -15,22 +16,25 @@ struct string_list *create_string_list ()
     return new_list;
 }
 
-void delete_string_list (struct string_list *list)
+void delete_string_list (struct string_list **list)
 {
     struct string_list_member *traverser;
 
     // Linearly iterate through list and pop off the head until the list is empty
-    while ((traverser = pop_front_string_list (list)) != NULL)
+    while ((traverser = pop_front_string_list (*list)) != NULL)
     {
         delete_string_list_member (traverser);
     }
+
+    free (*list);
+    *list = NULL; // Clean up dangling pointer
 }
 
 struct string_list_member *create_string_list_member (char *input_string)
 {
     // Allocate memory for list member and string data
     struct string_list_member *new_member = malloc (sizeof (struct string_list_member));
-    new_member->c_string = malloc (strlen (input_string) * sizeof (char));
+    new_member->c_string = malloc ((strlen (input_string) + 1) * sizeof (char));
     strcpy (new_member->c_string, input_string);
 
     // Set NULL pointers for adjacent elements
@@ -41,9 +45,9 @@ struct string_list_member *create_string_list_member (char *input_string)
 
 void delete_string_list_member (struct string_list_member *member)
 {
-    // Reclaim memory allocated for the member instance
-    if (member != NULL)
-        free (member);
+    // Clean up memory allocated for member and its string
+    free (member->c_string);
+    free (member);
 }
 
 void push_front_string_list (struct string_list *list, struct string_list_member *member)
@@ -146,7 +150,9 @@ struct string_list_member *pop_back_string_list (struct string_list *list)
 
 int is_string_list_empty (struct string_list *list)
 {
-    if ((list->head == NULL) && (list->tail == NULL))
+    if (list == NULL)
+        return 1;
+    else if ((list->head == NULL) && (list->tail == NULL))
         return 1;
     else
         return 0;

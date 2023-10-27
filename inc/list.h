@@ -15,7 +15,7 @@ struct string_list
 
 
 struct string_list *create_string_list();
-void delete_string_list (struct string_list *);
+void delete_string_list (struct string_list **);
 struct string_list_member *create_string_list_member (char *);
 void delete_string_list_member (struct string_list_member *);
 void push_front_string_list (struct string_list *, struct string_list_member *);
