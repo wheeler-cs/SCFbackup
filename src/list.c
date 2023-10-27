@@ -4,10 +4,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Allocates the memory for a new string_list object and sets default values for its member variables.
+ * 
+ * @returns The address of the newly-allocated string_list object.
+ * 
+ * @post Memory is allocated from the heap for the new struct instance and provided to the calling function as a
+ *       pointer.
+ * 
+ */
 struct string_list *create_string_list ()
 {
     // Allocate memory for new list
-    struct string_list *new_list = malloc (sizeof (struct string_list_member));
+    struct string_list *new_list = malloc (sizeof (struct string_list));
 
     // Set member variables to defaults
     new_list->head = new_list->tail = NULL;
@@ -16,6 +25,18 @@ struct string_list *create_string_list ()
     return new_list;
 }
 
+/**
+ * @brief Iterates through a string_list instance, removing each element until the list is empty.
+ * 
+ * @param list Pointer of a pointer to a string_list instance.
+ * 
+ * @pre It is expected that the list parameter has been allocated at least the memory required for a blank string_list.
+ * @post All allocated memory for the string_list object, including memory of its members, is deallocated, and the
+ *       dangling pointer it leaves behind is set to NULL.
+ * 
+ * @see delete_string_list_member
+ * 
+*/
 void delete_string_list (struct string_list **list)
 {
     struct string_list_member *traverser;
@@ -30,6 +51,16 @@ void delete_string_list (struct string_list **list)
     *list = NULL; // Clean up dangling pointer
 }
 
+/**
+ * @brief Allocates the memory needed for a string_list_member, based on the given input string.
+ * 
+ * @param input_string A C-string containing the characters the newly initialized string_list_member will store.
+ * 
+ * @returns A pointer to the newly-allocated string_list_member.
+ * 
+ * @post Memory is allocated for both the new string_list_member and its c_string member variable.
+ * 
+*/
 struct string_list_member *create_string_list_member (char *input_string)
 {
     // Allocate memory for list member and string data
@@ -43,9 +74,21 @@ struct string_list_member *create_string_list_member (char *input_string)
     return new_member;
 }
 
+/**
+ * @brief Frees up the memory allocated by the creation of the string_list_member instance.
+ * 
+ * @param member Pointer to an initialized instance of the string_list_member struct.
+ *
+ * @pre It is expected that the member parameter points to a properly-initialized string_list_member.
+ * @post Memory allocated to the given string_list_member instance is deallocated completely.
+ * 
+ * @note The dangling pointer is not handled in this function call and must be done so outside of it.
+ * 
+*/
 void delete_string_list_member (struct string_list_member *member)
 {
     // Clean up memory allocated for member and its string
+    // FIX: Memory leak was caused her originally because c_string data wasn't being freed w/ string_list_member.
     free (member->c_string);
     free (member);
 }
