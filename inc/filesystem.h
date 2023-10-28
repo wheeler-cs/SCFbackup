@@ -12,6 +12,8 @@
 #ifndef SCF_FILESYSTEM_H
 #define SCF_FILESYSTEM_H
 
+#include "list.h"
+
 #if defined(__linux__) // If on Linux systems
 
 #include "dirent.h"
@@ -25,6 +27,6 @@
 #error "Unsupported OS!"
 #endif
 
-void generate_file_database (char *, char **, unsigned int *);
+void generate_file_database (char *, struct string_list *, unsigned int);
 
 #endif

@@ -8,15 +8,21 @@
 
 // === Begin Linux Code ================================================================================================
 #if defined(__linux__)
-void generate_file_database (char *root_directory, char **file_names, unsigned int *list_size)
+void generate_file_database (char *root_directory, struct string_list *file_list, unsigned int depth)
 {
+    // Need some way of limiting depth so don't run into memory issues. This is especially true for deeper directories
+    // with a lot of files (i.e. the .git folder).
+    if (depth == 0)
+        return;
+
     DIR *dir_ptr;
     struct dirent *directory_info;
     struct stat file_info;
 
     char *full_name = NULL, *full_name_copy = NULL;
     unsigned int full_name_length = 0;
-    char **file_names_copy = NULL;
+
+    struct string_list_member *database_insert;
 
     // Attempt to open directory for indexing
     if ((dir_ptr = opendir (root_directory)) != NULL)
@@ -27,46 +33,35 @@ void generate_file_database (char *root_directory, char **file_names, unsigned i
             if (!(strcmp (directory_info->d_name, ".")) || !(strcmp (directory_info->d_name, "..")))
                 continue;
 
-            // NOTE: This is kind a jank way of doing it
-            // TODO: Make this better in the future
+            // Setup the full file's path to be opened
             full_name_length = strlen (root_directory) + 1 + strlen (directory_info->d_name);
             full_name_copy = realloc (full_name, full_name_length * sizeof (char));
+            // Sanity check memory reallocation
             if (full_name_copy == NULL)
             {
-                fprintf (stderr, "\nUnable to allocate memory for file name.");
+                fprintf (stderr, "\nUnable to allocate memory needed for directory database building.");
                 free (full_name);
                 return;
             }
+            // Combine higher directories w/ file name into one C-string
             full_name = full_name_copy;
             memset (full_name, '\0', full_name_length * sizeof (char));
             strcat (full_name, root_directory);
             strcat (full_name, "/");
             strcat (full_name, directory_info->d_name);
-            printf ("\n%s", full_name);
 
             // Get the filesystem attributes of the file
             if ((stat (full_name, &file_info)) == 0)
             {
                 if (S_ISDIR (file_info.st_mode)) // File is a directory, recurse
                 {
-                    printf ("/");
-                    generate_file_database (full_name, file_names, list_size);
+                    generate_file_database (full_name, file_list, depth - 1);
                 }
                 else if (S_ISREG(file_info.st_mode)) // File is an actual file, add to list
                 {
-                    printf ("**");
-                    *list_size = *list_size + 1;
-                    printf ("\nAllocating memory to list.");
-                    file_names_copy = realloc (file_names, *list_size * sizeof (char*));
-                    if (file_names_copy == NULL)
-                    {
-                        fprintf (stderr, "\nUnable to allocate memory for file entry list.");
-                        free (file_names);
-                        return;
-                    }
-
-                    file_names = file_names_copy;
-
+                    fflush (stdout);
+                    database_insert = create_string_list_member (full_name);
+                    push_front_string_list (file_list, database_insert);
                 }
             }
         }
@@ -74,7 +69,6 @@ void generate_file_database (char *root_directory, char **file_names, unsigned i
         // Stop a memory leak
         closedir (dir_ptr);
         free (full_name);
-        printf ("\n");
     }
     else
     {
