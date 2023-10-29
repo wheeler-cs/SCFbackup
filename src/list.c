@@ -285,3 +285,21 @@ int is_string_list_malformed (struct string_list *list)
     else
         return 0;
 }
+
+/**
+ * @brief Prints each c_string field of each string_list_member to console by linearly iterating through string_list.
+ *
+ * @param list The string_list containing string_list_members whose data is to be printed to terminal.
+ *
+ * @note This is more of a debugging/utility function instead of a practical function, but still has it usage.
+*/
+void traverse_print_string_list (struct string_list *list)
+{
+    struct string_list_member *printing_member = list->head;
+
+    while (printing_member != NULL)
+    {
+        printf ("\n%s", printing_member->c_string);
+        printing_member = printing_member->next;
+    }
+}
