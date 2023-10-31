@@ -9,7 +9,7 @@ int main (int argc, char **argv)
 {
     // TEST
     struct string_list *str_list = create_string_list();
-    generate_file_database (".", str_list, 3);
+    generate_file_database (".", str_list);
     traverse_print_string_list (str_list);
     delete_string_list (&str_list);
     // ENDTEST

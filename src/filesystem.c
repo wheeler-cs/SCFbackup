@@ -8,13 +8,8 @@
 
 // === Begin Linux Code ================================================================================================
 #if defined(__linux__)
-void generate_file_database (char *root_directory, struct string_list *file_list, unsigned int depth)
+void generate_file_database (char *root_directory, struct string_list *file_list)
 {
-    // Need some way of limiting depth so don't run into memory issues. This is especially true for deeper directories
-    // with a lot of files (i.e. the .git folder).
-    if (depth == 0)
-        return;
-
     DIR *dir_ptr;
     struct dirent *directory_info;
     struct stat file_info;
@@ -55,7 +50,7 @@ void generate_file_database (char *root_directory, struct string_list *file_list
             {
                 if (S_ISDIR (file_info.st_mode)) // File is a directory, recurse
                 {
-                    generate_file_database (full_name, file_list, depth - 1);
+                    generate_file_database (full_name, file_list);
                 }
                 else if (S_ISREG(file_info.st_mode)) // File is an actual file, add to list
                 {

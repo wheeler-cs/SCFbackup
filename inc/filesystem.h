@@ -27,6 +27,6 @@
 #error "Unsupported OS!"
 #endif
 
-void generate_file_database (char *, struct string_list *, unsigned int);
+void generate_file_database (char *, struct string_list *);
 
 #endif
