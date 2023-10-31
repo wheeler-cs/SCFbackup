@@ -34,7 +34,7 @@ void generate_file_database (char *root_directory, struct string_list *file_list
                 continue;
 
             // Setup the full file's path to be opened
-            full_name_length = strlen (root_directory) + 1 + strlen (directory_info->d_name);
+            full_name_length = strlen (root_directory) + strlen (directory_info->d_name) + 2; // Add 2 for '/' and '\0'
             full_name_copy = realloc (full_name, full_name_length * sizeof (char));
             // Sanity check memory reallocation
             if (full_name_copy == NULL)
