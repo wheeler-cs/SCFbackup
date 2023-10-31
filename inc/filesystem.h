@@ -14,6 +14,14 @@
 
 #include "list.h"
 
+#include <time.h>
+
+struct file_record
+{
+    char *file_name;
+    struct time_t modified_time;
+};
+
 #if defined(__linux__) // If on Linux systems
 
 #include "dirent.h"

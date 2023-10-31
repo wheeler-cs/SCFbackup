@@ -22,6 +22,7 @@ void generate_file_database (char *root_directory, struct string_list *file_list
     // Attempt to open directory for indexing
     if ((dir_ptr = opendir (root_directory)) != NULL)
     {
+        // Read through directory and locate all files within
         while ((directory_info = readdir (dir_ptr)) != NULL)
         {
             // Ignore . and .. directories
@@ -35,12 +36,13 @@ void generate_file_database (char *root_directory, struct string_list *file_list
             if (full_name_copy == NULL)
             {
                 fprintf (stderr, "\nUnable to allocate memory needed for directory database building.");
+                delete_string_list (&file_list);
                 free (full_name);
                 return;
             }
             // Combine higher directories w/ file name into one C-string
             full_name = full_name_copy;
-            memset (full_name, '\0', full_name_length * sizeof (char));
+            memset (full_name, '\0', (full_name_length +  1) * sizeof (char));
             strcat (full_name, root_directory);
             strcat (full_name, "/");
             strcat (full_name, directory_info->d_name);
