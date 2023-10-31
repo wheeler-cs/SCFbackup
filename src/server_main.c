@@ -11,6 +11,7 @@ int main (int argc, char **argv)
     struct string_list *str_list = create_string_list();
     generate_file_database (".", str_list);
     traverse_print_string_list (str_list);
+    printf ("\nList Size: %d\n", str_list->size);
     delete_string_list (&str_list);
     // ENDTEST
 

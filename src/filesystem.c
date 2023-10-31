@@ -54,7 +54,6 @@ void generate_file_database (char *root_directory, struct string_list *file_list
                 }
                 else if (S_ISREG(file_info.st_mode)) // File is an actual file, add to list
                 {
-                    fflush (stdout);
                     database_insert = create_string_list_member (full_name);
                     push_front_string_list (file_list, database_insert);
                 }
