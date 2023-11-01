@@ -9,7 +9,7 @@ all: server
 
 
 # Server-related build targets
-server: $(BLD_DIR)/filesystem.o $(BLD_DIR)/list.o $(BLD_DIR)/server.o $(BLD_DIR)/server_main.o
+server: $(BLD_DIR)/filesystem.o $(BLD_DIR)/hash.o $(BLD_DIR)/list.o $(BLD_DIR)/server.o $(BLD_DIR)/server_main.o
 	$(CC) $^ -o $(BLD_DIR)/$@
 
 $(BLD_DIR)/server_main.o: $(SRC_DIR)/server_main.c $(INC_DIR)/filesystem.h $(INC_DIR)/list.h $(INC_DIR)/server.h
@@ -24,6 +24,9 @@ $(BLD_DIR)/server.o: $(SRC_DIR)/server.c $(INC_DIR)/server.h
 
 # Shared build targets 
 $(BLD_DIR)/filesystem.o: $(SRC_DIR)/filesystem.c $(INC_DIR)/filesystem.h
+	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
+
+$(BLD_DIR)/hash.o: $(SRC_DIR)/hash.c $(INC_DIR)/hash.h
 	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
 
 $(BLD_DIR)/list.o: $(SRC_DIR)/list.c $(INC_DIR)/list.h

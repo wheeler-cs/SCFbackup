@@ -19,7 +19,7 @@
 struct file_record
 {
     char *file_name;
-    struct time_t modified_time;
+    time_t modified_time;
 };
 
 #if defined(__linux__) // If on Linux systems

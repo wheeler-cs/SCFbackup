@@ -1,4 +1,5 @@
 #include "filesystem.h"
+#include "hash.h"
 #include "list.h"
 #include "server.h"
 
@@ -10,8 +11,7 @@ int main (int argc, char **argv)
     // TEST
     struct string_list *str_list = create_string_list();
     generate_file_database (".", str_list);
-    traverse_print_string_list (str_list);
-    printf ("\nList Size: %d\n", str_list->size);
+    printf ("Hash: %x", calculate_file_crc32 ("Makefile"));
     delete_string_list (&str_list);
     // ENDTEST
 
