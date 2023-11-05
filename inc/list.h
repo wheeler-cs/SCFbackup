@@ -1,6 +1,8 @@
 #ifndef SCF_LIST_H
 #define SCF_LIST_H
 
+#include "filesystem.h"
+
 struct string_list_member
 {
     struct string_list_member *next, *previous;

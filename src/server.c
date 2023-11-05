@@ -1,5 +1,21 @@
 #include "server.h"
 
+#include <stdlib.h>
+
+/**
+ * @brief Allocates the memory required for a new instance of the server_info struct.
+ * 
+ * @returns A pointer to the newly-allocated memory used for the server_info instance.
+ * 
+ * @post Memory is allocated for the server_info, which should be deallocated before program
+ * termination.
+*/
+struct server_info *create_new_server()
+{
+    struct server_info *new_server_instance = malloc (sizeof (struct server_info));
+    blank_init_server (new_server_instance); // Set default values so instance isn't empty.
+    return new_server_instance;
+}
 
 /**
  * @brief Initializes internal information state for a server to a basic default. Used to prevent
