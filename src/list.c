@@ -1,5 +1,7 @@
 #include "list.h"
 
+#include "filesystem.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -65,7 +67,6 @@ struct list_member *create_list_member (unsigned int data_size)
 {
     // Allocate memory for list member and associated data
     struct list_member *new_member = malloc (sizeof (struct list_member));
-    new_member->data = malloc (data_size);
     new_member->data_size = data_size;
 
     // Set NULL pointers for adjacent elements
