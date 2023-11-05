@@ -9,10 +9,14 @@
 int main (int argc, char **argv)
 {
     // TEST
-    struct string_list *str_list = create_string_list();
-    generate_file_database (".", str_list);
-    printf ("Hash: %x", calculate_file_crc32 ("Makefile"));
-    delete_string_list (&str_list);
+    struct data_list *dat_list = create_list();
+    generate_file_database ("inc", dat_list);
+    //void (*free_file_record) (struct file_record*) = &delete_file_record;
+    delete_list (&dat_list, (void (*) (void *)) &delete_file_record);
+    if (is_list_empty (&dat_list))
+        printf ("\nData list is empty");
+
+    printf ("\n");
     // ENDTEST
 
     return 0;

@@ -22,6 +22,7 @@ struct file_record
     time_t modified_time;
 };
 
+// === Platform-Specific Code =========================================================================================
 #if defined(__linux__) // If on Linux systems
 
 #include "dirent.h"
@@ -34,7 +35,10 @@ struct file_record
 #else // Unsupported OS
 #error "Unsupported OS!"
 #endif
+// =====================================================================================================================
 
-void generate_file_database (char *, struct string_list *);
+void generate_file_database (char *, struct data_list *);
+struct file_record *create_file_record (char *, time_t);
+void delete_file_record (struct file_record*);
 
 #endif

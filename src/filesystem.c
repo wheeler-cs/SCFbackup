@@ -8,7 +8,7 @@
 
 // === Begin Linux Code ================================================================================================
 #if defined(__linux__)
-void generate_file_database (char *root_directory, struct string_list *file_list)
+void generate_file_database (char *root_directory, struct data_list *file_list)
 {
     DIR *dir_ptr;
     struct dirent *directory_info;
@@ -17,7 +17,7 @@ void generate_file_database (char *root_directory, struct string_list *file_list
     char *full_name = NULL, *full_name_copy = NULL;
     unsigned int full_name_length = 0;
 
-    struct string_list_member *database_insert;
+    struct list_member *database_insert;
 
     // Attempt to open directory for indexing
     if ((dir_ptr = opendir (root_directory)) != NULL)
@@ -36,13 +36,14 @@ void generate_file_database (char *root_directory, struct string_list *file_list
             if (full_name_copy == NULL)
             {
                 fprintf (stderr, "\nUnable to allocate memory needed for directory database building.");
-                delete_string_list (&file_list);
+                void (*free_file_record) (struct file_record*) = &delete_file_record;
+                delete_list (&file_list, (void (*) (void *)) free_file_record);
                 free (full_name);
                 return;
             }
             // Combine higher directories w/ file name into one C-string
             full_name = full_name_copy;
-            memset (full_name, '\0', (full_name_length +  1) * sizeof (char));
+            memset (full_name, '\0', full_name_length * sizeof (char));
             strcat (full_name, root_directory);
             strcat (full_name, "/");
             strcat (full_name, directory_info->d_name);
@@ -56,9 +57,9 @@ void generate_file_database (char *root_directory, struct string_list *file_list
                 }
                 else if (S_ISREG(file_info.st_mode)) // File is an actual file, add to list
                 {
-                    printf ("\n%lu", file_info.st_mtime);
-                    database_insert = create_string_list_member (full_name);
-                    push_front_string_list (file_list, database_insert);
+                    database_insert = create_list_member (sizeof (struct list_member));
+                    database_insert->data = create_file_record (full_name, file_info.st_mtime);
+                    push_front_list (file_list, database_insert);
                 }
             }
         }
@@ -81,3 +82,19 @@ unsigned int generate_file_database (char *root_directory, char **file_names)
 }
 
 #endif
+
+struct file_record *create_file_record (char *name, time_t mod_time)
+{
+    struct file_record *new_record = malloc (sizeof (struct file_record));
+    new_record->file_name = malloc ((strlen (name) + 1) * sizeof (char));
+    strcpy (new_record->file_name, name);
+    new_record->modified_time = mod_time;
+
+    return new_record;
+}
+
+void delete_file_record (struct file_record* del_record)
+{
+    free (del_record->file_name);
+    free (del_record);
+}
