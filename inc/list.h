@@ -1,13 +1,11 @@
 #ifndef SCF_LIST_H
 #define SCF_LIST_H
 
-#include <stdint.h>
-
 struct list_member
 {
     struct list_member *next, *previous;
     void *data;
-    uint64_t data_size;
+    unsigned int data_size;
 };
 
 struct data_list

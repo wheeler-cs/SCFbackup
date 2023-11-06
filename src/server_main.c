@@ -1,22 +1,19 @@
 #include "filesystem.h"
-#include "hash.h"
 #include "list.h"
 #include "server.h"
 
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int main (int argc, char **argv)
 {
     // TEST
-    struct data_list *dat_list = create_list();
-    generate_file_database ("inc", dat_list);
-    delete_list (&dat_list, (void (*) (void *)) &delete_file_record);
-    if (is_list_empty (dat_list))
-        printf ("\nData list is empty");
-    printf ("\n");
+    struct server_info *storage_server = create_new_server();
+    storage_server->data_directory = ".";
+    generate_file_database (storage_server->data_directory, storage_server->file_data);
+    delete_server (&storage_server, (void (*) (void*)) delete_file_record);
     // ENDTEST
 
+    printf ("\n");
     return 0;
 }

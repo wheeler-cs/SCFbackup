@@ -79,6 +79,8 @@ struct list_member *create_list_member (unsigned int data_size)
  * @brief Frees up the memory allocated by the creation of the list_member instance.
  * 
  * @param member Pointer to an initialized instance of the list_member struct.
+ * @param f Pointer to a deallocation function coded to handle the datatype stored in the
+ *        list_member instance.
  *
  * @pre It is expected that the member parameter points to a properly-initialized list_member.
  * @post Memory allocated to the given list_member instance is deallocated completely.

@@ -16,14 +16,14 @@ $(BLD_DIR)/server_main.o: $(SRC_DIR)/server_main.c $(INC_DIR)/filesystem.h $(INC
 	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
 
 
-$(BLD_DIR)/server.o: $(SRC_DIR)/server.c $(INC_DIR)/server.h
+$(BLD_DIR)/server.o: $(SRC_DIR)/server.c $(INC_DIR)/filesystem.h $(INC_DIR)/list.h $(INC_DIR)/server.h
 	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
 
 
 # Client-related build targets
 
 # Shared build targets 
-$(BLD_DIR)/filesystem.o: $(SRC_DIR)/filesystem.c $(INC_DIR)/filesystem.h
+$(BLD_DIR)/filesystem.o: $(SRC_DIR)/filesystem.c $(INC_DIR)/filesystem.h $(INC_DIR)/list.h
 	$(CC) $(CFLAGS) $< -o $@ -I$(INC_DIR)
 
 $(BLD_DIR)/hash.o: $(SRC_DIR)/hash.c $(INC_DIR)/hash.h

@@ -1,3 +1,4 @@
+#include "filesystem.h"
 #include "server.h"
 
 #include <stdlib.h>
@@ -40,5 +41,37 @@ void blank_init_server (struct server_info *server_instance)
     // Required files for server; found in data_directory
     server_instance->config_file = "server.cfg";
     server_instance->file_database = "database.json";
-    server_instance->timestamp_database = "most_recent.json";
+
+    // Set up server's data list used to track files
+    server_instance->file_data = create_list();
+}
+
+/**
+ * @brief Properly deallocates all memory acquired by an instance of server_info.
+ *
+ * @param server_info Pointer to the server_info instance that will have all containing memory
+ *        deallocated.
+ * @param f Pointer to a deallocation function coded to handle the unique datatype store in the
+ *        members of the instance's file_data.
+ * @pre The server provided should be properly initialized and, ideally, have members contained
+ *      within its file_data.
+ * @post The instance of server_info is deallocated entirely, including sub-member data.
+ *
+ * @note The deallocation function f should take one argument: a pointer to the datatype it is
+ *       designed to deallocate. From there, the function should properly deallocate the memory
+ *       allocated for that instance.
+ *
+ * @see delete_file_record in filesystem.c for an example of f.
+ */
+void delete_server (struct server_info** server_instance, void (*f) (void*))
+{
+    // This is some REALLY gnarly code, the address of a dereferenced pointer to a pointer's
+    // file_data; I did this primarily because I wanted to be able to handle the dangling pointer
+    // pointer, not that it matters too awful much...
+    delete_list (&(*server_instance)->file_data, f);
+    free ((*server_instance)->file_data);
+    free (*server_instance);
+
+    // Handle the dangling pointer
+    server_instance = NULL;
 }
