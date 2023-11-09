@@ -70,7 +70,8 @@ void generate_file_database (char *root_directory, struct data_list *file_list)
     }
     else
     {
-        fprintf (stderr, "Cannot open directory");
+        // TODO: Add better error handling for this
+        fprintf (stderr, "\nCannot open directory");
     }
 }
 

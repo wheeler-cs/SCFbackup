@@ -1,11 +1,18 @@
+# General gcc and building files
 build/
 *.o
 *.pch
+Makefile
 
+# Runtime files
 *.log
 *.temp
 
+# CMake-related files
 CMakeCache.txt
 cmake_install.cmake
 CMakeFiles/
-Makefile
+
+# Executables
+SCFserver
+SCFclient

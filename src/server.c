@@ -31,16 +31,16 @@ struct server_info *create_new_server()
 void blank_init_server (struct server_info *server_instance)
 {
     // Network information for server
-    server_instance->host_ip = "127.0.0.1";
-    server_instance->port = 8080;
+    server_instance->networking.ip_address = "127.0.0.1";
+    server_instance->networking.port = 8080;
 
     // Directories required for server to run
-    server_instance->backup_directory = "backup";
-    server_instance->data_directory = "data";
+    server_instance->configuration.backup_dir = "backup";
+    server_instance->configuration.data_dir = "data";
 
     // Required files for server; found in data_directory
-    server_instance->config_file = "server.cfg";
-    server_instance->file_database = "database.json";
+    server_instance->configuration.config_file = "server.cfg";
+    server_instance->configuration.file_database = "database.json";
 
     // Set up server's data list used to track files
     server_instance->file_data = create_list();
@@ -63,7 +63,7 @@ void blank_init_server (struct server_info *server_instance)
  *
  * @see delete_file_record in filesystem.c for an example of f.
  */
-void delete_server (struct server_info** server_instance, void (*f) (void*))
+void delete_server_data (struct server_info** server_instance, void (*f) (void*))
 {
     // This is some REALLY gnarly code, the address of a dereferenced pointer to a pointer's
     // file_data; I did this primarily because I wanted to be able to handle the dangling pointer
