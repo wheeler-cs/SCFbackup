@@ -4,3 +4,8 @@ build/
 
 *.log
 *.temp
+
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/
+Makefile
