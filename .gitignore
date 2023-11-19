@@ -16,3 +16,7 @@ CMakeFiles/
 # Executables
 SCFserver
 SCFclient
+
+# Directories
+backup/
+test/
