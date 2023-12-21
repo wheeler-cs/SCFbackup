@@ -12,14 +12,16 @@
 #ifndef SCF_FILESYSTEM_H
 #define SCF_FILESYSTEM_H
 
-#include "list.h"
-
 #include <time.h>
 
-struct file_record
-{
+struct file_entry {
     char *file_name;
-    time_t modified_time;
+    struct file_entry *next_file;
+};
+
+struct file_index {
+    struct file_entry *list_start;
+    unsigned int index_size;
 };
 
 // === Platform-Specific Code =========================================================================================
@@ -37,8 +39,10 @@ struct file_record
 #endif
 // =====================================================================================================================
 
-void generate_file_database (char *, struct data_list *);
-struct file_record *create_file_record (char *, time_t);
-void delete_file_record (struct file_record*);
+struct file_index *generate_file_database (char *);
+
+struct file_index *create_file_index();
+void append_file_to_index (struct file_index *, char *);
+void delete_index (struct file_index *);
 
 #endif

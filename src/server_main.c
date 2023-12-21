@@ -1,21 +1,15 @@
-#include "config.h"
 #include "filesystem.h"
-#include "list.h"
-#include "server.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 int main (int argc, char **argv)
 {
-    // TEST
-    struct server_info *storage_server = create_new_server();
-    storage_server->configuration.data_dir = ".";
-    storage_server->configuration.config_file = "./test/server.cfg";
-    load_server_config (storage_server);
-    generate_file_database (storage_server->configuration.data_dir, storage_server->file_data);
-    delete_server_data (&storage_server, (void (*) (void*)) delete_file_record);
-    // ENDTEST
+
+    struct file_index* test_idx = create_file_index();
+    append_file_to_index (test_idx, "TestA");
+    //append_file_to_index (test_idx, "TestB");
+    delete_index (test_idx);
 
     printf ("\n");
     return 0;
