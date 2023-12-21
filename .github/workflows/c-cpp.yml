@@ -20,7 +20,7 @@ jobs:
  #   - name: init
  #     run: make init
     - name: make
-      run: make
+      run: cd build && make
  #   - name: make check
  #     run: make check
  #   - name: make distcheck
