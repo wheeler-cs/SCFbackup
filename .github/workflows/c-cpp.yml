@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: build
+      run: mkdir build
     - name: cmake
       run: cd build && cmake ..
  #   - name: init
