@@ -6,10 +6,8 @@
 int main (int argc, char **argv)
 {
 
-    struct file_index* test_idx = create_file_index();
-    append_file_to_index (test_idx, "TestA");
-    append_file_to_index (test_idx, "TestB");
-    append_file_to_index (test_idx, "TestC");
+    struct file_index* test_idx = generate_file_index ("./src");
+    traverse_print_index (test_idx);
     delete_index (test_idx);
 
     printf ("\n");

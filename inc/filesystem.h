@@ -48,11 +48,12 @@ struct file_index {
 #endif
 // =====================================================================================================================
 
-struct file_index *generate_file_database (char *);
+struct file_index *generate_file_index (char *);
 
 struct file_index *create_file_index();
 void append_file_to_index (struct file_index *, char *);
 struct file_entry *index_tail (struct file_index *);
+void merge_file_indices (struct file_index *, struct file_index *);
 void traverse_print_index (struct file_index *);
 void delete_index (struct file_index *);
 
