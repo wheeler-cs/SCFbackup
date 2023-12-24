@@ -43,6 +43,8 @@ struct file_index {
 
 #include <Windows.h>
 
+#error Windows implementation is not yet supported.
+
 #else // Unsupported OS
 #error "Unsupported OS!"
 #endif
