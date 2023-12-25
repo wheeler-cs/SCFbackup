@@ -16,9 +16,10 @@ void initialize_logging (struct file_server *server_instance, char *log_file)
     }
 }
 
+// === Code in this block is based on https://wiki.openssl.org/index.php/Simple_TLS_Server =============================
+
 void create_socket (struct file_server *server_instance, int port)
 {
-    /* Code is based on https://wiki.openssl.org/index.php/Simple_TLS_Server */
     // Set up socket for creation
     struct sockaddr_in new_socket;
     new_socket.sin_family = AF_INET;
@@ -42,4 +43,15 @@ void create_socket (struct file_server *server_instance, int port)
     }
 }
 
+void create_context (struct file_server *server_instance)
+{
+    const SSL_METHOD *method = TLS_server_method();
+    server_instance->context = SSL_CTX_new (method);
 
+    if (!(server_instance->context))
+    {
+        // Couldn't create TLS context, exit the program
+    }
+}
+
+// =====================================================================================================================

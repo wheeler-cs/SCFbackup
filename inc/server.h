@@ -17,10 +17,12 @@
 struct file_server {
     int socket;
     FILE *logging;
+    SSL_CTX *context;
 };
 
 
 void create_socket (struct file_server *, int);
+void create_context (struct file_server *);
 void initialize_logging (struct file_server *, char *);
 struct file_server *create_file_server();
 
