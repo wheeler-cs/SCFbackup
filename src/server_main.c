@@ -11,6 +11,7 @@ int main (int argc, char **argv)
     create_socket (test_srvr, 9000);
     initialize_context (test_srvr);
     server_shutdown (test_srvr, "Shutting down server");
+    server_run (test_srvr);
 
     /*
     struct file_index* test_idx = generate_file_index ("./src");

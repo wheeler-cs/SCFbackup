@@ -15,7 +15,7 @@
 #include <openssl/ssl.h>
 
 struct file_server {
-    int socket;
+    int socket, client;
     FILE *logging;
     SSL_CTX *context;
 };
@@ -25,6 +25,7 @@ struct file_server *create_file_server();
 void initialize_logging (struct file_server *, char *);
 void create_socket (struct file_server *, int);
 void initialize_context (struct file_server *);
+void server_run (struct file_server *);
 void server_shutdown (struct file_server *, char *);
 
 #endif

@@ -1,5 +1,10 @@
 #include "server.h"
 
+#include <openssl/err.h>
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
+
 struct file_server *create_file_server()
 {
     struct file_server *new_server = malloc (sizeof (struct file_server));
@@ -63,6 +68,7 @@ void initialize_context (struct file_server *server_instance)
     // Load PEM files
     if (SSL_CTX_use_certificate_file (server_instance->context, "cert.pem", SSL_FILETYPE_PEM) <= 0)
     {
+        ERR_print_errors_fp (stderr);
         server_shutdown (server_instance, "Unable to load certification PEM file");
         exit (EXIT_FAILURE);
     }
@@ -74,6 +80,41 @@ void initialize_context (struct file_server *server_instance)
 }
 
 // =====================================================================================================================
+
+void server_run (struct file_server *server_instance)
+{
+    struct sockaddr_in addr;
+    unsigned int len = sizeof (addr);
+    SSL *ssl;
+    char *reply = "Test Message\n";
+
+    signal (SIGPIPE, SIG_IGN);
+
+    while (1)
+    {
+        if ((server_instance->client = accept (server_instance->socket, (struct sockaddr *) &addr, &len)) < 0)
+        {
+            // NOTE: May possibly only indicate no connection occurred w/o exiting the server
+            server_shutdown (server_instance, "Could not accept incoming connection");
+            exit (EXIT_FAILURE);
+        }
+
+        ssl = SSL_new (server_instance->context);
+        SSL_set_fd (ssl, server_instance->client);
+
+        if (SSL_accept (ssl) <= 0)
+            printf ("a\n");
+        else
+            SSL_write (ssl, reply, strlen (reply));
+
+        SSL_shutdown (ssl);
+        SSL_free (ssl);
+        close (server_instance->client);
+    }
+
+    close (server_instance->socket);
+    SSL_CTX_free (server_instance->context);
+}
 
 void server_shutdown (struct file_server *server_instance, char *message)
 {

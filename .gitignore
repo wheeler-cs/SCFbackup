@@ -5,6 +5,7 @@ build/
 Makefile
 
 # Runtime files
+*.pem
 *.log
 *.temp
 
