@@ -89,6 +89,7 @@ void run_server (struct file_server *server_instance)
 
     signal (SIGPIPE, SIG_IGN);
 
+    log_server (server_instance, "[INFO] Server started. Awaiting connection.", 1);
     while (1)
     {
         server_instance->client = accept (server_instance->socket, (struct sockaddr *) &addr, &len);
@@ -140,3 +141,17 @@ void shutdown_server (struct file_server *server_instance, char *message)
         printf ("%s\n", message);
 }
 
+void log_server (struct file_server *server_instance, char *message, int do_echo)
+{
+    if (server_instance->logging)
+    {
+        fprintf (server_instance->logging, message);
+        fprintf (server_instance->logging, "\n");
+
+        if (do_echo)
+        {
+            fprintf (stdout, message);
+            fprintf (stdout, "\n");
+        }
+    }
+}
