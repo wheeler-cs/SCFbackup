@@ -6,6 +6,8 @@ Makefile
 
 # Runtime files
 *.pem
+*.crt
+*.key
 *.log
 *.temp
 

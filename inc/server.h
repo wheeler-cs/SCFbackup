@@ -21,11 +21,11 @@ struct file_server {
 };
 
 
-struct file_server *create_file_server();
+struct file_server *initialize_file_server();
 void initialize_logging (struct file_server *, char *);
-void create_socket (struct file_server *, int);
+void initialize_socket (struct file_server *, int);
 void initialize_context (struct file_server *);
-void server_run (struct file_server *);
-void server_shutdown (struct file_server *, char *);
+void run_server (struct file_server *);
+void shutdown_server (struct file_server *, char *);
 
 #endif

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-struct file_server *create_file_server()
+struct file_server *initialize_file_server()
 {
     struct file_server *new_server = malloc (sizeof (struct file_server));
 
@@ -19,14 +19,14 @@ void initialize_logging (struct file_server *server_instance, char *log_file)
 {
     if ((server_instance->logging = fopen (log_file, "a")) == NULL)
     {
-        server_shutdown (server_instance, "Couldn't open log file for logging");
+        shutdown_server (server_instance, "Couldn't open log file for logging");
         exit (EXIT_FAILURE);
     }
 }
 
 // === Code in this block is based on https://wiki.openssl.org/index.php/Simple_TLS_Server =============================
 
-void create_socket (struct file_server *server_instance, int port)
+void initialize_socket (struct file_server *server_instance, int port)
 {
     // Set up socket for creation
     struct sockaddr_in new_socket;
@@ -37,19 +37,19 @@ void create_socket (struct file_server *server_instance, int port)
     // Attempt to create a socket object and give it to the server
     if ((server_instance->socket = socket (AF_INET, SOCK_STREAM, 0)) < 0)
     {
-        server_shutdown (server_instance, "Unable to create new socket");
+        shutdown_server (server_instance, "Unable to create new socket");
         exit (EXIT_FAILURE);
     }
 
     if ((bind (server_instance->socket, (struct sockaddr *) &new_socket, sizeof (new_socket))) < 0)
     {
-        server_shutdown (server_instance, "Unable to bind socket to specified port");
+        shutdown_server (server_instance, "Unable to bind socket to specified port");
         exit (EXIT_FAILURE);
     }
 
     if ((listen (server_instance->socket, 1)) < 0)
     {
-        server_shutdown (server_instance, "Unable to listen in on newly-created socket");
+        shutdown_server (server_instance, "Unable to listen in on newly-created socket");
         exit (EXIT_FAILURE);
     }
 }
@@ -61,27 +61,26 @@ void initialize_context (struct file_server *server_instance)
 
     if (!(server_instance->context))
     {
-        server_shutdown (server_instance, "Couldn't create TLS context for connection");
+        shutdown_server (server_instance, "Couldn't create TLS context for connection");
         exit (EXIT_FAILURE);
     }
 
     // Load PEM files
-    if (SSL_CTX_use_certificate_file (server_instance->context, "cert.pem", SSL_FILETYPE_PEM) <= 0)
+    if (SSL_CTX_use_certificate_file (server_instance->context, "domain.crt", SSL_FILETYPE_PEM) <= 0)
     {
-        ERR_print_errors_fp (stderr);
-        server_shutdown (server_instance, "Unable to load certification PEM file");
+        shutdown_server (server_instance, "Unable to load certification PEM file");
         exit (EXIT_FAILURE);
     }
-    if (SSL_CTX_use_PrivateKey_file (server_instance->context, "key.pem", SSL_FILETYPE_PEM) <= 0)
+    if (SSL_CTX_use_PrivateKey_file (server_instance->context, "domain.key", SSL_FILETYPE_PEM) <= 0)
     {
-        server_shutdown (server_instance, "Unable to load key PEM file");
+        shutdown_server (server_instance, "Unable to load key PEM file");
         exit (EXIT_FAILURE);
     }
 }
 
 // =====================================================================================================================
 
-void server_run (struct file_server *server_instance)
+void run_server (struct file_server *server_instance)
 {
     struct sockaddr_in addr;
     unsigned int len = sizeof (addr);
@@ -92,10 +91,11 @@ void server_run (struct file_server *server_instance)
 
     while (1)
     {
-        if ((server_instance->client = accept (server_instance->socket, (struct sockaddr *) &addr, &len)) < 0)
+        server_instance->client = accept (server_instance->socket, (struct sockaddr *) &addr, &len);
+        if (server_instance->client < 0)
         {
             // NOTE: May possibly only indicate no connection occurred w/o exiting the server
-            server_shutdown (server_instance, "Could not accept incoming connection");
+            shutdown_server (server_instance, "Could not accept incoming connection");
             exit (EXIT_FAILURE);
         }
 
@@ -116,7 +116,7 @@ void server_run (struct file_server *server_instance)
     SSL_CTX_free (server_instance->context);
 }
 
-void server_shutdown (struct file_server *server_instance, char *message)
+void shutdown_server (struct file_server *server_instance, char *message)
 {
     if (server_instance)
     {
